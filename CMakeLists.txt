@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.13..3.18)
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+
 # Extract project version from source
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/nanogui/common.h"
   nanogui_version_defines REGEX "#define NANOGUI_VERSION_(MAJOR|MINOR|PATCH) ")
@@ -56,7 +58,7 @@ else()
 endif()
 
 set(NANOGUI_BUILD_SHARED_DEFAULT ON)
-set(NANOGUI_BUILD_PYTHON_DEFAULT ON)
+set(NANOGUI_BUILD_PYTHON_DEFAULT OFF)
 set(NANOGUI_BUILD_GLFW_DEFAULT ON)
 
 if (CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$")
@@ -64,7 +66,7 @@ if (CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$")
   set(NANOGUI_BUILD_SHARED_DEFAULT OFF)
   set(NANOGUI_BUILD_PYTHON_DEFAULT OFF)
   set(NANOGUI_BUILD_GLAD_DEFAULT   OFF)
-  set(NANOGUI_BUILD_GLFW_DEFAULT   OFF)
+  set(NANOGUI_BUILD_GLFW_DEFAULT   ON)
 
   set(CMAKE_STATIC_LIBRARY_SUFFIX ".bc")
   set(CMAKE_EXECUTABLE_SUFFIX ".bc")
@@ -85,10 +87,10 @@ elseif (APPLE AND ((CMAKE_OSX_ARCHITECTURES MATCHES "arm64") OR
   # Apple M1 compatibility
   set(NANOGUI_NATIVE_FLAGS_DEFAULT "-mcpu=apple-a12")
 else()
-  set(NANOGUI_NATIVE_FLAGS_DEFAULT "-march=nehalem")
+  set(NANOGUI_NATIVE_FLAGS_DEFAULT "-march=armv8-a")
 endif()
 
-option(NANOGUI_BUILD_EXAMPLES            "Build NanoGUI example application?" ON)
+option(NANOGUI_BUILD_EXAMPLES            "Build NanoGUI example application?" OFF)
 option(NANOGUI_BUILD_SHARED              "Build NanoGUI as a shared library?" ${NANOGUI_BUILD_SHARED_DEFAULT})
 option(NANOGUI_BUILD_PYTHON              "Build a Python plugin for NanoGUI?" ${NANOGUI_BUILD_PYTHON_DEFAULT})
 option(NANOGUI_BUILD_GLAD                "Build GLAD OpenGL loader library? (needed on Windows)" ${NANOGUI_BUILD_GLAD_DEFAULT})
@@ -423,6 +425,8 @@ add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
   include/nanogui/shader.h src/shader.cpp
   include/nanogui/imageview.h src/imageview.cpp
   include/nanogui/traits.h src/traits.cpp
+  include/nanogui/rectangle.h src/rectangle.cpp
+  include/nanogui/audiocanvas.h src/audiocanvas.cpp
   include/nanogui/renderpass.h
   include/nanogui/formhelper.h
   include/nanogui/icons.h
